@@ -1,0 +1,6 @@
+{
+  "name": "Quiz Master BD",
+  "description": "Android-styled Quiz & Earn application with multi-login methods, daily rewards, Spin & Scratch, withdraw wallet (bKash, Nagad, Rocket), categories, leaderboards, daily tasks, and full admin panel.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
