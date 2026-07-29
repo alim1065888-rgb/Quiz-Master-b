@@ -29,7 +29,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
   ];
 
   if (isAdmin) {
-    navItems.push({ id: 'admin', label: 'Admin', icon: ShieldAlert });
+    navItems.push({ id: 'admin', label: 'এডমিন', icon: ShieldAlert });
   }
 
   return (

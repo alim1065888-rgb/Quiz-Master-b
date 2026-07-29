@@ -1,0 +1,21 @@
+{
+  "entities": {
+    "users": {
+      "title": "User Profiles",
+      "description": "User profile records with quiz statistics and scores",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "avatar": { "type": "string" },
+        "authMethod": { "type": "string" },
+        "coins": { "type": "number" },
+        "xp": { "type": "number" },
+        "level": { "type": "number" },
+        "role": { "type": "string" },
+        "lastLoginDate": { "type": "string" }
+      },
+      "required": ["id", "name", "email"]
+    }
+  }
+}

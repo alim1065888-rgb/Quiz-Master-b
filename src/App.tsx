@@ -3,6 +3,7 @@ import {
   UserProfile, QuizCategory, QuizQuestion, QuizResult, 
   WithdrawRequest, DailyTask, AppSettings, WithdrawMethod, Language 
 } from './types';
+import { db, doc, setDoc } from './lib/firebase';
 import { 
   getStoredUser, saveStoredUser, 
   getStoredSettings, saveStoredSettings, 
@@ -73,6 +74,11 @@ export default function App() {
   const updateUserState = (newUser: UserProfile) => {
     setUser(newUser);
     saveStoredUser(newUser);
+    if (!newUser.isGuest && newUser.id) {
+      setDoc(doc(db, 'users', newUser.id), newUser, { merge: true }).catch(err => {
+        console.warn('Firestore sync warning:', err);
+      });
+    }
   };
 
   const handleUpdateSettings = (newSettings: AppSettings) => {
@@ -219,6 +225,18 @@ export default function App() {
     saveStoredQuestions(updated);
   };
 
+  const handleAddCategory = (newCat: QuizCategory) => {
+    const updated = [...categories, newCat];
+    setCategories(updated);
+    saveStoredCategories(updated);
+  };
+
+  const handleDeleteCategory = (catId: string) => {
+    const updated = categories.filter((c) => c.id !== catId);
+    setCategories(updated);
+    saveStoredCategories(updated);
+  };
+
   const handleApproveWithdraw = (wId: string) => {
     const updated = withdraws.map((w) => w.id === wId ? { ...w, status: 'approved' as const, processedAt: new Date().toISOString() } : w);
     setWithdraws(updated);
@@ -246,6 +264,11 @@ export default function App() {
     setNotifications(updated);
     saveStoredNotifications(updated);
   };
+
+  const isOwnerAdmin = 
+    user.email?.toLowerCase().trim() === 'alim1065888@gmail.com' || 
+    user.email?.toLowerCase().trim() === 'aa.alim234@gmail.com' || 
+    user.role === 'admin';
 
   if (showSplash) {
     return <SplashScreen onFinish={() => setShowSplash(false)} />;
@@ -379,19 +402,36 @@ export default function App() {
           )}
 
           {activeTab === 'admin' && (
-            <AdminPanelView
-              questions={questions}
-              categories={categories}
-              withdraws={withdraws}
-              onAddQuestion={handleAddQuestion}
-              onDeleteQuestion={handleDeleteQuestion}
-              onAddCategory={() => {}}
-              onApproveWithdraw={handleApproveWithdraw}
-              onRejectWithdraw={handleRejectWithdraw}
-              onSendNotification={handleSendNotification}
-              onCloseAdmin={() => setActiveTab('home')}
-              darkMode={settings.darkMode}
-            />
+            isOwnerAdmin ? (
+              <AdminPanelView
+                questions={questions}
+                categories={categories}
+                withdraws={withdraws}
+                currentUser={user}
+                onAddQuestion={handleAddQuestion}
+                onDeleteQuestion={handleDeleteQuestion}
+                onAddCategory={handleAddCategory}
+                onDeleteCategory={handleDeleteCategory}
+                onApproveWithdraw={handleApproveWithdraw}
+                onRejectWithdraw={handleRejectWithdraw}
+                onSendNotification={handleSendNotification}
+                onAddCoinsToUser={(coins) => handleAddRewardCoins(coins)}
+                onCloseAdmin={() => setActiveTab('home')}
+                darkMode={settings.darkMode}
+              />
+            ) : (
+              <div className="py-12 text-center space-y-3">
+                <p className="text-sm font-bold text-rose-500">
+                  আপনার ইমেইল ({user.email || 'Guest'}) থেকে অ্যাডমিন প্যানেলে এক্সেস করার অনুমতি নেই।
+                </p>
+                <button
+                  onClick={() => setActiveTab('home')}
+                  className="px-4 py-2 rounded-xl bg-slate-800 text-white font-bold text-xs"
+                >
+                  হোমে ফিরে যান
+                </button>
+              </div>
+            )
           )}
         </main>
 
@@ -402,7 +442,7 @@ export default function App() {
             onTabChange={setActiveTab}
             language={settings.language}
             darkMode={settings.darkMode}
-            isAdmin={user.role === 'admin'}
+            isAdmin={isOwnerAdmin}
           />
         )}
 

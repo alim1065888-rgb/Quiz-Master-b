@@ -135,17 +135,22 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
         </div>
       </div>
 
-      {/* Admin Panel Toggle shortcut */}
-      {user.role === 'admin' && (
+      {/* Admin Panel Toggle shortcut - Visible to alim1065888@gmail.com */}
+      {(user.email?.toLowerCase().trim() === 'alim1065888@gmail.com' || user.email?.toLowerCase().trim() === 'aa.alim234@gmail.com' || user.role === 'admin') && (
         <button
           onClick={onOpenAdmin}
-          className="w-full p-4 rounded-3xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-black text-sm flex items-center justify-between shadow-lg hover:scale-[1.01] transition-all"
+          className="w-full p-4 rounded-3xl bg-gradient-to-r from-purple-700 via-indigo-700 to-slate-900 text-white font-black text-sm flex items-center justify-between shadow-lg hover:scale-[1.01] transition-all border border-purple-500/30"
         >
           <div className="flex items-center gap-3">
-            <ShieldCheck className="w-6 h-6 text-amber-300" />
-            <span>Open Admin Panel Dashboard</span>
+            <ShieldCheck className="w-6 h-6 text-amber-300 animate-pulse" />
+            <div className="text-left">
+              <span className="block text-sm">অ্যাডমিন কন্ট্রোল প্যানেল (Admin Panel)</span>
+              <span className="text-[10px] text-purple-200 font-normal">প্রশ্ন, ক্যাটাগরি, ক্যাশআউট ও ইউজার কন্ট্রোল</span>
+            </div>
           </div>
-          <span className="bg-white/20 px-3 py-1 rounded-full text-xs">SUPER ADMIN</span>
+          <span className="bg-amber-400 text-slate-950 px-3 py-1 rounded-full text-xs font-black">
+            OPEN
+          </span>
         </button>
       )}
 
