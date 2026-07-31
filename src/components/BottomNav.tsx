@@ -21,15 +21,15 @@ export const BottomNav: React.FC<BottomNavProps> = ({
   const t = translations[language];
 
   const navItems = [
-    { id: 'home', label: t.nav_home, icon: Home },
-    { id: 'quiz', label: t.nav_quiz, icon: Brain },
-    { id: 'wallet', label: t.nav_wallet, icon: Wallet },
-    { id: 'leaderboard', label: t.nav_leaderboard, icon: Trophy },
-    { id: 'profile', label: t.nav_profile, icon: User },
+    { id: 'home', label: t.nav_home, icon: Home, activeColor: 'bg-blue-500/15 text-blue-600 dark:text-blue-400' },
+    { id: 'quiz', label: t.nav_quiz, icon: Brain, activeColor: 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400' },
+    { id: 'wallet', label: t.nav_wallet, icon: Wallet, activeColor: 'bg-indigo-500/15 text-indigo-600 dark:text-indigo-400' },
+    { id: 'leaderboard', label: t.nav_leaderboard, icon: Trophy, activeColor: 'bg-amber-500/15 text-amber-500 dark:text-amber-400' },
+    { id: 'profile', label: t.nav_profile, icon: User, activeColor: 'bg-purple-500/15 text-purple-600 dark:text-purple-400' },
   ];
 
   if (isAdmin) {
-    navItems.push({ id: 'admin', label: 'এডমিন', icon: ShieldAlert });
+    navItems.push({ id: 'admin', label: 'এডমিন', icon: ShieldAlert, activeColor: 'bg-rose-500/15 text-rose-600 dark:text-rose-400' });
   }
 
   return (
@@ -47,20 +47,22 @@ export const BottomNav: React.FC<BottomNavProps> = ({
             <button
               key={item.id}
               onClick={() => onTabChange(item.id)}
-              className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-2xl transition-all duration-200 ${
+              className={`flex flex-col items-center justify-center py-1 px-2 rounded-2xl transition-all duration-200 ${
                 isActive 
-                  ? 'text-blue-600 dark:text-blue-400 font-bold scale-105' 
+                  ? 'font-extrabold scale-105' 
                   : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
               }`}
             >
               <div className={`p-1.5 rounded-xl transition-all ${
                 isActive 
-                  ? 'bg-blue-500/15 text-blue-600 dark:text-blue-400' 
+                  ? item.activeColor 
                   : 'bg-transparent'
               }`}>
                 <Icon className={`w-5 h-5 ${isActive ? 'stroke-[2.5]' : 'stroke-2'}`} />
               </div>
-              <span className="text-[10px] sm:text-[11px] mt-0.5 tracking-tight font-bold">
+              <span className={`text-[10px] sm:text-[11px] mt-0.5 tracking-tight ${
+                isActive ? 'font-black text-slate-900 dark:text-white' : 'font-medium'
+              }`}>
                 {item.label}
               </span>
             </button>
