@@ -50,6 +50,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       const nameToUse = fbUser.displayName || emailToUse.split('@')[0];
       const avatarUrl = fbUser.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(nameToUse)}`;
 
+      const ADMIN_EMAILS = ['alim1065888@gmail.com', 'aa.alim234@gmail.com'];
+      const isUserAdmin = Boolean(emailToUse && ADMIN_EMAILS.includes(emailToUse.toLowerCase().trim()));
+
       const googleUser: UserProfile = {
         id: fbUser.uid,
         name: nameToUse,
@@ -62,19 +65,19 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         level: 2,
         country: 'Bangladesh',
         referralCode: 'QM-G' + Math.floor(100000 + Math.random() * 900000),
-        totalReferred: 1,
+        totalReferred: 0,
         dailyQuizzesPlayed: 0,
         dailyCoinsEarned: 0,
         lastQuizDate: new Date().toISOString().split('T')[0],
         lastLoginDate: new Date().toISOString().split('T')[0],
-        dailyStreak: 3,
+        dailyStreak: 1,
         hasClaimedDailyBonus: false,
         spinsRemaining: 5,
         scratchesRemaining: 5,
         adsWatchedToday: 0,
         completedTaskIds: [],
-        achievements: ['First Quiz', '100 Correct Answers', 'Google Verified'],
-        role: (emailToUse.toLowerCase().trim() === 'alim1065888@gmail.com' || emailToUse.toLowerCase().trim() === 'aa.alim234@gmail.com' || emailToUse.includes('admin')) ? 'admin' : 'user'
+        achievements: ['First Quiz', 'Google Verified'],
+        role: isUserAdmin ? 'admin' : 'user'
       };
 
       // Sync to Firestore
@@ -98,11 +101,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     setIsGoogleLoading(true);
     
     setTimeout(async () => {
-      const emailToUse = userEmail || googleEmail || 'alim1065888@gmail.com';
-      const nameToUse = userName || googleName || (emailToUse ? emailToUse.split('@')[0] : 'Alim Chowdhury');
+      const emailToUse = userEmail || googleEmail || 'user@gmail.com';
+      const nameToUse = userName || googleName || (emailToUse ? emailToUse.split('@')[0] : 'User');
       
       const avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(nameToUse)}`;
       const uid = 'usr_g_' + Math.random().toString(36).substring(2, 9);
+
+      const ADMIN_EMAILS = ['alim1065888@gmail.com', 'aa.alim234@gmail.com'];
+      const isUserAdmin = Boolean(emailToUse && ADMIN_EMAILS.includes(emailToUse.toLowerCase().trim()));
 
       const googleUser: UserProfile = {
         id: uid,
@@ -116,19 +122,19 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         level: 2,
         country: 'Bangladesh',
         referralCode: 'QM-G' + Math.floor(100000 + Math.random() * 900000),
-        totalReferred: 1,
+        totalReferred: 0,
         dailyQuizzesPlayed: 0,
         dailyCoinsEarned: 0,
         lastQuizDate: new Date().toISOString().split('T')[0],
         lastLoginDate: new Date().toISOString().split('T')[0],
-        dailyStreak: 3,
+        dailyStreak: 1,
         hasClaimedDailyBonus: false,
         spinsRemaining: 5,
         scratchesRemaining: 5,
         adsWatchedToday: 0,
         completedTaskIds: [],
-        achievements: ['First Quiz', '100 Correct Answers', 'Google Verified'],
-        role: (emailToUse.toLowerCase().trim() === 'alim1065888@gmail.com' || emailToUse.toLowerCase().trim() === 'aa.alim234@gmail.com' || emailToUse.includes('admin')) ? 'admin' : 'user'
+        achievements: ['First Quiz', 'Google Verified'],
+        role: isUserAdmin ? 'admin' : 'user'
       };
       
       // Sync to Firestore
@@ -354,50 +360,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               ) : (
                 <>
                   <div className="text-center">
-                    <p className="text-xs font-bold text-slate-500 mb-3">
-                      Choose an account or enter your Google details:
+                    <p className="text-xs font-bold text-slate-600 dark:text-slate-300 mb-2">
+                      আপনার গুগল ইমেইল দিয়ে সাইন ইন করুন:
                     </p>
-                  </div>
-
-                  {/* Pre-saved Google Account choices */}
-                  <div className="space-y-2">
-                    <button
-                      type="button"
-                      onClick={() => handleGoogleSignInWithAccount('Alim Chowdhury', 'aa.alim234@gmail.com')}
-                      className="w-full p-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60 hover:border-blue-500 flex items-center gap-3 text-left transition-all"
-                    >
-                      <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-500 to-indigo-600 text-white font-black text-sm flex items-center justify-center shrink-0">
-                        A
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="font-bold text-xs truncate">Alim Chowdhury</h4>
-                        <p className="text-[11px] text-slate-400 truncate">aa.alim234@gmail.com</p>
-                      </div>
-                      <span className="text-[10px] bg-blue-500/10 text-blue-600 font-bold px-2 py-0.5 rounded-full shrink-0">
-                        Admin Account
-                      </span>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => handleGoogleSignInWithAccount('Tanvir Ahmed', 'tanvir.ahmed@gmail.com')}
-                      className="w-full p-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60 hover:border-blue-500 flex items-center gap-3 text-left transition-all"
-                    >
-                      <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-600 text-white font-black text-sm flex items-center justify-center shrink-0">
-                        T
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="font-bold text-xs truncate">Tanvir Ahmed</h4>
-                        <p className="text-[11px] text-slate-400 truncate">tanvir.ahmed@gmail.com</p>
-                      </div>
-                    </button>
-                  </div>
-
-                  <div className="relative py-1 text-center">
-                    <span className="text-[10px] uppercase tracking-wider font-bold text-slate-400 bg-white dark:bg-slate-900 px-2 z-10 relative">
-                      OR enter your Google Email
-                    </span>
-                    <div className="absolute inset-x-0 top-1/2 border-t border-slate-200 dark:border-slate-800" />
                   </div>
 
                   {/* Custom Google Sign-In Form */}
@@ -409,21 +374,21 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     className="space-y-3"
                   >
                     <div>
-                      <label className="block text-[11px] font-bold text-slate-500 mb-1">
-                        Full Name
+                      <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-1">
+                        আপনার নাম (Full Name)
                       </label>
                       <input
                         type="text"
-                        placeholder="e.g. Alim Chowdhury"
+                        placeholder="যেমন: তানভির আহমেদ"
                         value={googleName}
                         onChange={(e) => setGoogleName(e.target.value)}
-                        className="w-full px-3 py-2 rounded-2xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-3 py-2.5 rounded-2xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs outline-none focus:ring-2 focus:ring-blue-500 dark:text-white"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-[11px] font-bold text-slate-500 mb-1">
-                        Google Email Address (@gmail.com)
+                      <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-1">
+                        গুগল ইমেইল এড্রেস (@gmail.com)
                       </label>
                       <input
                         type="email"
@@ -431,7 +396,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                         placeholder="yourname@gmail.com"
                         value={googleEmail}
                         onChange={(e) => setGoogleEmail(e.target.value)}
-                        className="w-full px-3 py-2 rounded-2xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-3 py-2.5 rounded-2xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs outline-none focus:ring-2 focus:ring-blue-500 dark:text-white"
                       />
                     </div>
 
@@ -442,7 +407,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                       <svg className="w-4 h-4 fill-white" viewBox="0 0 24 24">
                         <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
                       </svg>
-                      <span>Sign in with Google Account</span>
+                      <span>গুগল অ্যাকাউন্ট দিয়ে প্রবেশ করুন</span>
                     </button>
                   </form>
 

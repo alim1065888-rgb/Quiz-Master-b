@@ -28,12 +28,13 @@ export const ReferralView: React.FC<ReferralViewProps> = ({
   };
 
   const handleShare = () => {
-    const text = `🎁 Join Quiz Master BD using my referral code "${user.referralCode}" to get 50 bonus coins instantly! Download & play quiz to earn cash: https://quizmasterbd.com/invite/${user.referralCode}`;
+    const shareUrl = window.location.origin + window.location.pathname + '?ref=' + user.referralCode;
+    const text = `🎁 Quiz Master BD-এ আমার রেফারেল কোড "${user.referralCode}" দিয়ে ফ্রিতে ৫০ পয়েন্ট বোনাস পাবেন! প্রবেশ করুন: ${shareUrl}`;
     if (navigator.share) {
-      navigator.share({ title: 'Quiz Master BD Invite', text });
+      navigator.share({ title: 'Quiz Master BD Invite', text, url: shareUrl });
     } else {
       navigator.clipboard.writeText(text);
-      alert(t.copied);
+      alert(language === 'bn' ? 'আমন্ত্রণ লিঙ্ক কপি হয়েছে!' : t.copied);
     }
   };
 

@@ -155,7 +155,7 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({
                 </span>
                 <img src={usr.avatar} alt={usr.name} className="w-9 h-9 rounded-full object-cover" />
                 <div>
-                  <h4 className="font-bold text-xs">{usr.name}</h4>
+                  <h4 className="font-bold text-xs text-slate-900 dark:text-white">{usr.name}</h4>
                   <span className="text-[10px] text-slate-400 font-medium">
                     {usr.quizzesWon || 10} Quizzes Won
                   </span>

@@ -194,8 +194,8 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
         </div>
       </div>
 
-      {/* Admin Panel Toggle shortcut - Visible to alim1065888@gmail.com */}
-      {(user.email?.toLowerCase().trim() === 'alim1065888@gmail.com' || user.email?.toLowerCase().trim() === 'aa.alim234@gmail.com' || user.role === 'admin') && (
+      {/* Admin Panel Toggle shortcut - Visible only to admin emails */}
+      {Boolean(!user.isGuest && user.email && ['alim1065888@gmail.com', 'aa.alim234@gmail.com'].includes(user.email.toLowerCase().trim())) && (
         <button
           onClick={onOpenAdmin}
           className="w-full p-4 rounded-3xl bg-gradient-to-r from-purple-700 via-indigo-700 to-slate-900 text-white font-black text-sm flex items-center justify-between shadow-lg hover:scale-[1.01] transition-all border border-purple-500/30"

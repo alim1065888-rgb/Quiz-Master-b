@@ -181,7 +181,7 @@ export const WalletView: React.FC<WalletViewProps> = ({
               placeholder="01712345678"
               value={accountNumber}
               onChange={(e) => setAccountNumber(e.target.value.replace(/\D/g, ''))}
-              className="w-full px-3.5 py-3 rounded-2xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 font-mono text-sm outline-none focus:ring-2 focus:ring-emerald-500"
+              className="w-full px-3.5 py-3 rounded-2xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 font-mono text-sm outline-none focus:ring-2 focus:ring-emerald-500 dark:text-white"
             />
           </div>
 
@@ -197,7 +197,7 @@ export const WalletView: React.FC<WalletViewProps> = ({
               required
               value={amountBDT}
               onChange={(e) => setAmountBDT(Number(e.target.value))}
-              className="w-full px-3.5 py-3 rounded-2xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 font-mono text-sm outline-none focus:ring-2 focus:ring-emerald-500"
+              className="w-full px-3.5 py-3 rounded-2xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 font-mono text-sm outline-none focus:ring-2 focus:ring-emerald-500 dark:text-white"
             />
           </div>
 

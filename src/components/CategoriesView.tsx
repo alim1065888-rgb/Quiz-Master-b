@@ -58,7 +58,7 @@ export const CategoriesView: React.FC<CategoriesViewProps> = ({
           placeholder={language === 'bn' ? 'ক্যাটাগরি খুঁজুন...' : 'Search categories...'}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full bg-transparent text-sm outline-none placeholder:text-slate-400 font-medium"
+          className="w-full bg-transparent text-sm outline-none placeholder:text-slate-400 font-medium dark:text-white"
         />
       </div>
 

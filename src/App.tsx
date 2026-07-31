@@ -39,8 +39,49 @@ export default function App() {
   const [showSplash, setShowSplash] = useState(true);
   const [user, setUser] = useState<UserProfile>(getStoredUser);
   const [settings, setSettings] = useState<AppSettings>(getStoredSettings);
-  const [activeTab, setActiveTab] = useState<string>('home');
-  const [tabHistory, setTabHistory] = useState<string[]>(['home']);
+  // Initial Tab from localStorage or hash to support page refresh without losing view
+  const getInitialTab = (): string => {
+    try {
+      const saved = localStorage.getItem('qmbd_active_tab');
+      if (saved && ['home', 'quiz', 'categories', 'wallet', 'referral', 'leaderboard', 'profile', 'admin'].includes(saved)) {
+        return saved;
+      }
+      const hash = window.location.hash.replace('#', '');
+      if (hash && ['home', 'quiz', 'categories', 'wallet', 'referral', 'leaderboard', 'profile', 'admin'].includes(hash)) {
+        return hash;
+      }
+    } catch (e) {
+      // ignore
+    }
+    return 'home';
+  };
+
+  const [activeTab, setActiveTab] = useState<string>(getInitialTab);
+  const [tabHistory, setTabHistory] = useState<string[]>([getInitialTab()]);
+
+  // Persist activeTab to localStorage on change
+  useEffect(() => {
+    try {
+      localStorage.setItem('qmbd_active_tab', activeTab);
+      window.location.hash = activeTab;
+    } catch (e) {}
+  }, [activeTab]);
+
+  // Detect referral query link e.g. ?ref=QM-123456
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const refCode = params.get('ref') || params.get('referral') || params.get('invite');
+      if (refCode) {
+        localStorage.setItem('qmbd_pending_ref', refCode);
+        if (!user.referredBy) {
+          setTimeout(() => {
+            alert(`রেফারেল কোড সনাক্ত হয়েছে (${refCode})! রেফারেল পেজে গিয়ে কোডটি অ্যাপ্লাই করুন এবং ৫০ পয়েন্ট বোনাস নিন!`);
+          }, 1200);
+        }
+      }
+    } catch (e) {}
+  }, []);
 
   // Navigation Stack Handler
   const handleNavigate = (newTab: string) => {
@@ -311,10 +352,8 @@ export default function App() {
     saveStoredNotifications(updated);
   };
 
-  const isOwnerAdmin = 
-    user.email?.toLowerCase().trim() === 'alim1065888@gmail.com' || 
-    user.email?.toLowerCase().trim() === 'aa.alim234@gmail.com' || 
-    user.role === 'admin';
+  const ADMIN_EMAILS = ['alim1065888@gmail.com', 'aa.alim234@gmail.com'];
+  const isOwnerAdmin = !user.isGuest && Boolean(user.email && ADMIN_EMAILS.includes(user.email.toLowerCase().trim()));
 
   if (showSplash) {
     return <SplashScreen onFinish={() => setShowSplash(false)} />;

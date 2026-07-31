@@ -10,7 +10,8 @@ const STORAGE_KEYS = {
   QUESTIONS: 'qmbd_questions_data',
   CATEGORIES: 'qmbd_categories_data',
   TASKS: 'qmbd_daily_tasks',
-  LEADERBOARD: 'qmbd_leaderboard'
+  LEADERBOARD: 'qmbd_leaderboard',
+  ACTIVE_TAB: 'qmbd_active_tab'
 };
 
 const DEFAULT_GUEST_USER: UserProfile = {
@@ -44,7 +45,7 @@ const DEFAULT_SETTINGS: AppSettings = {
   language: 'bn',
   soundEnabled: true,
   vibrationEnabled: true,
-  deviceFrameEnabled: true
+  deviceFrameEnabled: false
 };
 
 const SEED_WITHDRAWS: WithdrawRequest[] = [

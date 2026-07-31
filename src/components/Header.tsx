@@ -61,7 +61,7 @@ export const Header: React.FC<HeaderProps> = ({
                 alt={user.name} 
                 className="w-10 h-10 rounded-full object-cover ring-2 ring-blue-500 shadow-sm" 
               />
-              {user.role === 'admin' && (
+              {Boolean(!user.isGuest && user.email && ['alim1065888@gmail.com', 'aa.alim234@gmail.com'].includes(user.email.toLowerCase().trim())) && (
                 <span className="absolute -top-1 -right-1 bg-purple-600 text-[8px] text-white font-bold p-0.5 rounded-full shadow">
                   <ShieldCheck className="w-3 h-3" />
                 </span>
