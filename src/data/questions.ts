@@ -86,6 +86,19 @@ export const initialQuestions: QuizQuestion[] = [
 
   // SCIENCE
   {
+    id: 'sci_sun_1',
+    categoryId: 'science',
+    type: 'mcq',
+    question: 'What is the primary component of sunlight?',
+    questionBn: 'সূর্যের আলোর প্রধান উপাদান কী?',
+    options: ['Oxygen', 'Hydrogen', 'Nitrogen', 'Carbon'],
+    optionsBn: ['অক্সিজেন', 'হাইড্রোজেন', 'নাইট্রোজেন', 'কার্বন'],
+    correctOptionIndex: 1,
+    explanation: 'Sunlight is produced by nuclear fusion of hydrogen atoms into helium inside the sun.',
+    explanationBn: 'সূর্যের কেন্দ্রে হাইড্রোজেন পরমাণুর নিউক্লিয়ার ফিউশন বিক্রিয়ার মাধ্যমে আলো ও শক্তি উৎপন্ন হয়।',
+    difficulty: 'medium'
+  },
+  {
     id: 'sci_1',
     categoryId: 'science',
     type: 'mcq',

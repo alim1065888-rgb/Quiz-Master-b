@@ -40,6 +40,52 @@ export default function App() {
   const [user, setUser] = useState<UserProfile>(getStoredUser);
   const [settings, setSettings] = useState<AppSettings>(getStoredSettings);
   const [activeTab, setActiveTab] = useState<string>('home');
+  const [tabHistory, setTabHistory] = useState<string[]>(['home']);
+
+  // Navigation Stack Handler
+  const handleNavigate = (newTab: string) => {
+    if (newTab === activeTab) return;
+    setTabHistory((prev) => [...prev, newTab]);
+    setActiveTab(newTab);
+    try {
+      window.history.pushState({ tab: newTab }, '', '');
+    } catch (e) {
+      // ignore state error if iframe restricted
+    }
+  };
+
+  const handleGoBack = () => {
+    if (tabHistory.length > 1) {
+      const updatedHistory = [...tabHistory];
+      updatedHistory.pop();
+      const prevTab = updatedHistory[updatedHistory.length - 1] || 'home';
+      setTabHistory(updatedHistory);
+      setActiveTab(prevTab);
+    } else if (activeTab !== 'home') {
+      setTabHistory(['home']);
+      setActiveTab('home');
+    }
+  };
+
+  // Mobile Hardware Back Button (popstate event listener)
+  useEffect(() => {
+    try {
+      window.history.replaceState({ tab: 'home' }, '', '');
+    } catch (e) {}
+
+    const handlePopState = (e: PopStateEvent) => {
+      if (e.state && e.state.tab) {
+        setActiveTab(e.state.tab);
+        setTabHistory((prev) => (prev.length > 1 ? prev.slice(0, -1) : ['home']));
+      } else {
+        setActiveTab('home');
+        setTabHistory(['home']);
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   // App Data
   const [questions, setQuestions] = useState<QuizQuestion[]>(getStoredQuestions);
@@ -125,7 +171,7 @@ export default function App() {
     setActiveCategory(cat);
     setActiveQuestions(shuffled);
     setQuizResult(null);
-    setActiveTab('quiz_play');
+    handleNavigate('quiz_play');
   };
 
   // Finish Quiz
@@ -149,7 +195,7 @@ export default function App() {
     };
 
     updateUserState(updatedUser);
-    setActiveTab('quiz_result');
+    handleNavigate('quiz_result');
   };
 
   // Reward handlers
@@ -289,6 +335,8 @@ export default function App() {
             user={user}
             settings={settings}
             unreadCount={notifications.filter((n) => !n.read).length}
+            canGoBack={activeTab !== 'home'}
+            onGoBack={handleGoBack}
             onOpenNotifications={() => alert('Notifications: Welcome to Quiz Master BD!')}
             onToggleTheme={() => handleUpdateSettings({ ...settings, darkMode: !settings.darkMode })}
             onToggleLanguage={() => handleUpdateSettings({ ...settings, language: settings.language === 'en' ? 'bn' : 'en' })}
@@ -298,13 +346,13 @@ export default function App() {
         )}
 
         {/* View Routing Stage */}
-        <main className="max-w-4xl mx-auto p-4">
+        <main className="max-w-4xl mx-auto p-4 pb-28">
           {activeTab === 'home' && (
             <HomeView
               user={user}
               categories={categories}
               onSelectCategory={handleStartQuiz}
-              onNavigate={setActiveTab}
+              onNavigate={handleNavigate}
               onClaimDailyReward={handleClaimDailyReward}
               onOpenSpin={() => setIsSpinModalOpen(true)}
               onOpenScratch={() => setIsScratchModalOpen(true)}
@@ -338,7 +386,7 @@ export default function App() {
               category={activeCategory}
               questions={activeQuestions}
               onFinishQuiz={handleFinishQuiz}
-              onCancel={() => setActiveTab('home')}
+              onCancel={handleGoBack}
               soundEnabled={settings.soundEnabled}
               vibrationEnabled={settings.vibrationEnabled}
               language={settings.language}
@@ -350,7 +398,7 @@ export default function App() {
             <QuizResultView
               result={quizResult}
               onPlayAgain={() => handleStartQuiz(quizResult.categoryId)}
-              onGoHome={() => setActiveTab('home')}
+              onGoHome={() => handleNavigate('home')}
               language={settings.language}
               darkMode={settings.darkMode}
             />
@@ -390,12 +438,13 @@ export default function App() {
               user={user}
               settings={settings}
               onUpdateSettings={handleUpdateSettings}
+              onUpdateProfile={(updated) => updateUserState({ ...user, ...updated })}
               onLogout={() => {
                 localStorage.clear();
                 window.location.reload();
               }}
               onOpenAuthModal={() => setIsAuthModalOpen(true)}
-              onOpenAdmin={() => setActiveTab('admin')}
+              onOpenAdmin={() => handleNavigate('admin')}
               language={settings.language}
               darkMode={settings.darkMode}
             />
@@ -416,7 +465,7 @@ export default function App() {
                 onRejectWithdraw={handleRejectWithdraw}
                 onSendNotification={handleSendNotification}
                 onAddCoinsToUser={(coins) => handleAddRewardCoins(coins)}
-                onCloseAdmin={() => setActiveTab('home')}
+                onCloseAdmin={handleGoBack}
                 darkMode={settings.darkMode}
               />
             ) : (
@@ -425,7 +474,7 @@ export default function App() {
                   আপনার ইমেইল ({user.email || 'Guest'}) থেকে অ্যাডমিন প্যানেলে এক্সেস করার অনুমতি নেই।
                 </p>
                 <button
-                  onClick={() => setActiveTab('home')}
+                  onClick={handleGoBack}
                   className="px-4 py-2 rounded-xl bg-slate-800 text-white font-bold text-xs"
                 >
                   হোমে ফিরে যান
@@ -435,16 +484,14 @@ export default function App() {
           )}
         </main>
 
-        {/* Bottom Navigation */}
-        {activeTab !== 'quiz_play' && (
-          <BottomNav
-            activeTab={activeTab === 'categories' ? 'quiz' : activeTab}
-            onTabChange={setActiveTab}
-            language={settings.language}
-            darkMode={settings.darkMode}
-            isAdmin={isOwnerAdmin}
-          />
-        )}
+        {/* Bottom Navigation (Fixed Permanently on All Pages) */}
+        <BottomNav
+          activeTab={activeTab === 'categories' ? 'quiz' : activeTab}
+          onTabChange={handleNavigate}
+          language={settings.language}
+          darkMode={settings.darkMode}
+          isAdmin={isOwnerAdmin}
+        />
 
         {/* Modals */}
         <AuthModal

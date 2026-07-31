@@ -15,21 +15,21 @@ const STORAGE_KEYS = {
 
 const DEFAULT_GUEST_USER: UserProfile = {
   id: 'guest_' + Math.random().toString(36).substring(2, 8),
-  name: 'Guest Player',
+  name: 'রাহাদ',
   avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80',
   authMethod: 'guest',
   isGuest: true,
-  coins: 50,
-  xp: 100,
-  level: 1,
+  coins: 1250,
+  xp: 450,
+  level: 2,
   country: 'Bangladesh',
-  referralCode: 'GUEST-880',
-  totalReferred: 0,
-  dailyQuizzesPlayed: 0,
-  dailyCoinsEarned: 0,
+  referralCode: 'RAHAD-880',
+  totalReferred: 2,
+  dailyQuizzesPlayed: 1,
+  dailyCoinsEarned: 50,
   lastQuizDate: new Date().toISOString().split('T')[0],
   lastLoginDate: new Date().toISOString().split('T')[0],
-  dailyStreak: 1,
+  dailyStreak: 3,
   hasClaimedDailyBonus: false,
   spinsRemaining: 3,
   scratchesRemaining: 3,
@@ -41,10 +41,10 @@ const DEFAULT_GUEST_USER: UserProfile = {
 
 const DEFAULT_SETTINGS: AppSettings = {
   darkMode: false,
-  language: 'en',
+  language: 'bn',
   soundEnabled: true,
   vibrationEnabled: true,
-  deviceFrameEnabled: false
+  deviceFrameEnabled: true
 };
 
 const SEED_WITHDRAWS: WithdrawRequest[] = [
@@ -168,13 +168,12 @@ const SEED_TASKS: DailyTask[] = [
 ];
 
 const SEED_LEADERBOARD: LeaderboardUser[] = [
-  { id: 'l1', name: 'Md. Rafiqul Islam', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80', coins: 14200, xp: 8500, rank: 1, quizzesWon: 142, badge: '👑 Champion' },
-  { id: 'l2', name: 'Farhana Akter', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80', coins: 11800, xp: 7100, rank: 2, quizzesWon: 110, badge: '🥈 Master' },
-  { id: 'l3', name: 'Kazi Mahfuz', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80', coins: 9500, xp: 5800, rank: 3, quizzesWon: 89, badge: '🥉 Expert' },
-  { id: 'l4', name: 'Nusrat Jahan', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80', coins: 7800, xp: 4900, rank: 4, quizzesWon: 72 },
-  { id: 'l5', name: 'Anisur Rahman', avatar: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=150&auto=format&fit=crop&q=80', coins: 6400, xp: 4100, rank: 5, quizzesWon: 61 },
-  { id: 'l6', name: 'Tania Sultana', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80', coins: 5200, xp: 3400, rank: 6, quizzesWon: 48 },
-  { id: 'l7', name: 'Sabbir Ahmed', avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&auto=format&fit=crop&q=80', coins: 4100, xp: 2800, rank: 7, quizzesWon: 39 }
+  { id: 'l1', name: 'আয়েশা', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80', coins: 15000, xp: 9200, rank: 1, quizzesWon: 150, badge: '👑 Champion' },
+  { id: 'l2', name: 'রহিম', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80', coins: 12000, xp: 7800, rank: 2, quizzesWon: 120, badge: '🥈 Master' },
+  { id: 'l3', name: 'ফাতিমা', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80', coins: 11500, xp: 7100, rank: 3, quizzesWon: 115, badge: '🥉 Expert' },
+  { id: 'l55', name: 'রাহাদ', avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80', coins: 1260, xp: 850, rank: 55, quizzesWon: 18 },
+  { id: 'l56', name: 'রহিম কে.', avatar: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=150&auto=format&fit=crop&q=80', coins: 11000, xp: 6900, rank: 56, quizzesWon: 108 },
+  { id: 'l57', name: 'রাহাদ এম.', avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&auto=format&fit=crop&q=80', coins: 11000, xp: 6850, rank: 57, quizzesWon: 105 }
 ];
 
 export function getStoredUser(): UserProfile {

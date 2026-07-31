@@ -148,37 +148,47 @@ export const QuizPlayView: React.FC<QuizPlayViewProps> = ({
   const optionsList = language === 'bn' && currentQuestion.optionsBn ? currentQuestion.optionsBn : currentQuestion.options;
 
   return (
-    <div className="max-w-xl mx-auto space-y-4 pb-24 animate-fade-in">
-      {/* Header Info */}
-      <div className={`p-4 rounded-3xl border flex items-center justify-between gap-3 ${
-        darkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200/80 shadow-sm'
-      }`}>
-        <div className="flex items-center gap-2.5">
-          <button
-            onClick={onCancel}
-            className="p-2 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-500 font-bold text-xs"
-          >
-            Exit
-          </button>
-          <div>
-            <h3 className="font-extrabold text-sm line-clamp-1">
-              {language === 'bn' ? category.nameBn : category.name}
-            </h3>
-            <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
-              {t.question} {currentIndex + 1} / {questions.length}
-            </span>
-          </div>
-        </div>
-
-        {/* Circular Timer Pill */}
-        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-mono font-bold text-xs">
-          <Clock className={`w-4 h-4 ${timeLeft <= 5 ? 'text-rose-500 animate-pulse' : 'text-emerald-500'}`} />
-          <span className={timeLeft <= 5 ? 'text-rose-500' : ''}>{timeLeft}s</span>
-        </div>
+    <div className="max-w-md mx-auto space-y-3 pb-24 animate-fade-in px-1">
+      {/* Top Blue Header Bar from Reference Image */}
+      <div className="bg-blue-600 text-white rounded-2xl p-3 flex items-center justify-between shadow-md">
+        <button
+          onClick={onCancel}
+          className="p-1.5 rounded-full hover:bg-blue-700/80 transition-colors text-white"
+        >
+          <ArrowLeft className="w-5 h-5" />
+        </button>
+        <h3 className="font-extrabold text-base tracking-tight text-white">
+          {language === 'bn' ? category.nameBn : category.name}
+        </h3>
+        <div className="w-6" /> {/* Placeholder for alignment balance */}
       </div>
 
-      {/* Question Card */}
-      <div className={`p-5 sm:p-6 rounded-3xl border transition-all ${
+      {/* Sub Header: Timer and Question Count */}
+      <div className={`px-4 py-2.5 rounded-2xl border flex items-center justify-between text-xs font-bold ${
+        darkMode ? 'bg-slate-900 border-slate-800 text-slate-300' : 'bg-white border-slate-200/80 text-slate-700 shadow-2xs'
+      }`}>
+        <div className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 font-extrabold">
+          <Clock className={`w-4 h-4 ${timeLeft <= 5 ? 'text-rose-500 animate-pulse' : ''}`} />
+          <span>
+            {language === 'bn' ? `সময়: ০০:${timeLeft < 10 ? '০' + timeLeft : timeLeft}` : `Time: 00:${timeLeft < 10 ? '0' + timeLeft : timeLeft}`}
+          </span>
+        </div>
+
+        <span className="font-extrabold text-slate-800 dark:text-slate-100">
+          {language === 'bn' ? `প্রশ্ন: ${currentIndex + 1}/${questions.length}` : `Question: ${currentIndex + 1}/${questions.length}`}
+        </span>
+      </div>
+
+      {/* Top Emerald Progress Bar */}
+      <div className="w-full bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+        <div 
+          className="bg-emerald-500 h-full transition-all duration-300 rounded-full"
+          style={{ width: `${((currentIndex + 1) / questions.length) * 100}%` }}
+        />
+      </div>
+
+      {/* Main Question Card */}
+      <div className={`p-5 rounded-3xl border transition-all ${
         darkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200/80 shadow-md'
       }`}>
         {/* Difficulty Badge */}
@@ -199,7 +209,7 @@ export const QuizPlayView: React.FC<QuizPlayViewProps> = ({
         </div>
 
         {/* Question Text */}
-        <h2 className="text-base sm:text-lg font-black leading-snug mb-4">
+        <h2 className="text-base sm:text-lg font-black leading-snug mb-4 text-slate-900 dark:text-white">
           {language === 'bn' ? currentQuestion.questionBn : currentQuestion.question}
         </h2>
 
@@ -214,21 +224,29 @@ export const QuizPlayView: React.FC<QuizPlayViewProps> = ({
           </div>
         )}
 
-        {/* Answer Options */}
+        {/* Option Buttons with colorful pills matching image */}
         <div className="space-y-2.5 my-4">
           {optionsList.map((opt, idx) => {
-            let stateClass = 'bg-slate-50 dark:bg-slate-800/80 border-slate-200 dark:border-slate-700 hover:border-emerald-400';
+            let stateClass = 'bg-slate-50 dark:bg-slate-800/80 border-slate-200 dark:border-slate-700 hover:border-blue-400 text-slate-800 dark:text-slate-100';
+            let letterBg = 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300';
             let icon = null;
+
+            if (idx === 0) letterBg = 'bg-cyan-100 text-cyan-800 dark:bg-cyan-950 dark:text-cyan-300';
+            else if (idx === 1) letterBg = 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300';
+            else if (idx === 2) letterBg = 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300';
+            else if (idx === 3) letterBg = 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300';
 
             if (currentAnswer !== undefined) {
               if (idx === currentQuestion.correctOptionIndex) {
-                stateClass = 'bg-emerald-500/20 border-emerald-500 text-emerald-700 dark:text-emerald-300 font-extrabold';
-                icon = <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" />;
+                stateClass = 'bg-emerald-500 border-emerald-600 text-white font-black shadow-md';
+                letterBg = 'bg-white text-emerald-700 font-extrabold';
+                icon = <CheckCircle2 className="w-5 h-5 text-white shrink-0" />;
               } else if (idx === currentAnswer) {
-                stateClass = 'bg-rose-500/20 border-rose-500 text-rose-700 dark:text-rose-300 font-extrabold';
-                icon = <XCircle className="w-5 h-5 text-rose-500 shrink-0" />;
+                stateClass = 'bg-rose-500 border-rose-600 text-white font-black shadow-md';
+                letterBg = 'bg-white text-rose-700 font-extrabold';
+                icon = <XCircle className="w-5 h-5 text-white shrink-0" />;
               } else {
-                stateClass = 'bg-slate-100 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 opacity-60';
+                stateClass = 'bg-slate-100 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 opacity-50';
               }
             }
 
@@ -240,10 +258,10 @@ export const QuizPlayView: React.FC<QuizPlayViewProps> = ({
                 className={`w-full p-3.5 rounded-2xl border text-left font-bold text-sm flex items-center justify-between gap-3 transition-all ${stateClass}`}
               >
                 <div className="flex items-center gap-3">
-                  <span className="w-6 h-6 rounded-full bg-slate-200 dark:bg-slate-700 text-xs flex items-center justify-center shrink-0">
+                  <span className={`w-7 h-7 rounded-xl text-xs font-black flex items-center justify-center shrink-0 shadow-xs ${letterBg}`}>
                     {String.fromCharCode(65 + idx)}
                   </span>
-                  <span>{opt}</span>
+                  <span className="text-sm font-extrabold">{opt}</span>
                 </div>
                 {icon}
               </button>
@@ -269,31 +287,21 @@ export const QuizPlayView: React.FC<QuizPlayViewProps> = ({
         )}
       </div>
 
-      {/* Navigation Buttons */}
-      <div className="flex items-center justify-between gap-3 pt-2">
-        <button
-          disabled={currentIndex === 0}
-          onClick={handlePrev}
-          className="px-4 py-2.5 rounded-2xl border border-slate-200 dark:border-slate-800 font-bold text-xs flex items-center gap-1 disabled:opacity-40"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span>{t.previous}</span>
-        </button>
-
+      {/* Bottom Controls: 50:50 Lifeline & Next Question Button */}
+      <div className="flex items-center justify-between gap-3 pt-1">
         <button
           onClick={handleSkip}
-          className="px-4 py-2.5 rounded-2xl bg-amber-500/10 text-amber-600 font-bold text-xs flex items-center gap-1 hover:bg-amber-500/20"
+          className="px-4 py-2.5 rounded-2xl bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 font-extrabold text-xs flex items-center gap-1.5 border border-amber-300/50 hover:scale-105 active:scale-95 transition-all"
         >
-          <SkipForward className="w-4 h-4" />
-          <span>{t.skip}</span>
+          <Sparkles className="w-4 h-4 text-amber-600" />
+          <span>{language === 'bn' ? '৫০:৫০' : '50:50'}</span>
         </button>
 
         <button
           onClick={handleNext}
-          className="px-5 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs flex items-center gap-1.5 shadow-md"
+          className="px-6 py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs flex items-center gap-2 shadow-md hover:scale-105 active:scale-95 transition-all"
         >
-          <span>{currentIndex === questions.length - 1 ? t.submit : t.next}</span>
-          <ArrowRight className="w-4 h-4" />
+          <span>{currentIndex === questions.length - 1 ? t.submit : (language === 'bn' ? 'পরবর্তী প্রশ্ন >' : 'Next Question >')}</span>
         </button>
       </div>
     </div>
